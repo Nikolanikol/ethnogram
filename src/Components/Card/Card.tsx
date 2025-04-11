@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react";
+import { FC, useEffect } from "react";
 import { UserProfile } from "./TypeCard";
 import CardImg from "../../UI/CardImg";
 import UserLinkPhone from "../../UI/CardUserLinkPhone";

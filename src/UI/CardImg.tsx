@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import noUserCard from "../assets/noUserCard.jpg";
 interface CardImgProps {
   data: string[];

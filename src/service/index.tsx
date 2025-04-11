@@ -1,4 +1,4 @@
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 interface CategoriesData {
   id?: number;
@@ -17,7 +17,7 @@ class Service {
     }));
     return data;
   }
-  static async getUserCategories(id: number[]) {
+  static async getUserCategories() {
     const data: CategoriesData[] = [];
     try {
       const querySnapshot = await getDocs(collection(db, "cats"));

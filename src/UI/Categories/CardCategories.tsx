@@ -1,5 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
-import Service from "../../service";
+import { FC } from "react";
 import { wocabular } from "./wocabular";
 interface CardCategoriesProps {
   data: number[];

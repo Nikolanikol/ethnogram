@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import { UserProfile } from "../Card/TypeCard";
 import Card from "../Card/Card";
 
