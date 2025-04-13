@@ -21,12 +21,12 @@ const ModalFilter: FC<ModalFilterProps> = ({ isShow }) => {
     <div
       className={clsx(
         isShow
-          ? `w-[100vw] h-[100vh]  top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] 0 z-50 bg-black/50 fixed  flex justify-center items-center`
+          ? `w-[100vw] h-[100vh] flex-col top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] 0 z-50 bg-black/50 fixed  flex justify-center items-center`
           : "hidden"
       )}
     >
       <button
-        className="h-5 w-full  "
+        className="h-5 w-full  border-2 px-4 py-2 border-red-500 rounded-xl "
         onClick={() => dispatch(setModalHidden(false))}
       >
         close
