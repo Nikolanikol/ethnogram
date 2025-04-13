@@ -19,13 +19,18 @@ const ModalFilter: FC<ModalFilterProps> = ({ isShow }) => {
   const dispatch = useDispatch();
   return (
     <div
-      onClick={() => dispatch(setModalHidden(false))}
       className={clsx(
         isShow
           ? `w-[100vw] h-[100vh]  top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] 0 z-50 bg-black/50 fixed  flex justify-center items-center`
           : "hidden"
       )}
     >
+      <button
+        className="h-5 w-full  "
+        onClick={() => dispatch(setModalHidden(false))}
+      >
+        close
+      </button>
       <div className="px-10 py-6 bg-white rounded-3xl shadow-2xl w-[500px] h-[700px]">
         {" "}
         <h3 className="font-bold text-4xl">Фильтр по категориям</h3>
