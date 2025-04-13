@@ -13,7 +13,6 @@ const CityRow: FC<CityRowProps> = ({ data }) => {
     cityes = cityWocabular.filter((item) => {
       return data.includes(item.id);
     });
-    console.log(cityes);
   }
 
   return (

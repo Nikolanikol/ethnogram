@@ -28,7 +28,7 @@ class Service {
         obj.title = doc.data().title;
         data.push(obj);
       });
-      console.log(data);
+
       return data;
     } catch (error) {
       console.error("Ошибка получения документов:", error);
@@ -45,7 +45,7 @@ class Service {
         obj.ru = doc.data().ru;
         data.push(obj);
       });
-      console.log(data);
+
       return data;
     } catch (error) {
       console.error("Ошибка получения документов:", error);
