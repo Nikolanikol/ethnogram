@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import CardList from "../../Components/CardList/CardList";
 
 import Spinner from "../../Components/Spinner/Spinner";
@@ -9,11 +9,11 @@ import ModalFilter from "../../Components/ModalFilter/ModalFilter";
 
 const Catalog = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const [isShow, setIsShow] = useState(false);
+
   const { isLoading, filteredItems, modalIsShow } = useSelector(
     (state: RootState) => state.userReducer
   );
-  console.log(modalIsShow, "modalIsShow");
+
   useEffect(() => {
     dispatch(fetchUsers());
   }, []);

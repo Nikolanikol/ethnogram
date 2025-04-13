@@ -4,7 +4,7 @@ import { UserState } from "./UserType";
 import Service from "../../service";
 import { UserProfile } from "../../Components/Card/TypeCard";
 import { tagFilter } from "../../utils/tagFilter";
-import { cityFilter } from "../../utils/CityFilter";
+import { getCityByFilter } from "../../utils/getCityByFilter";
 
 const initialState: UserState = {
   isLoading: true,
@@ -31,14 +31,14 @@ export const userSlice = createSlice({
     setCityFilter: (state, action: PayloadAction<string>) => {
       state.cityFilter = action.payload;
       state.filteredItems = [
-        ...tagFilter(cityFilter(state.items, state.cityFilter)),
+        ...tagFilter(getCityByFilter(state.items, state.cityFilter)),
       ];
     },
     setCategoryFilter: (state, action: PayloadAction<string>) => {
       state.categoryFilter = action.payload;
       state.filteredItems = [
         ...tagFilter(
-          cityFilter(state.items, state.cityFilter),
+          getCityByFilter(state.items, state.cityFilter),
           state.categoryFilter
         ),
       ];

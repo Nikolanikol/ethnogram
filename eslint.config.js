@@ -36,7 +36,7 @@ export default tseslint.config(
       //       argsIgnorePattern: "^_",
       //     },
       //   ],
-      "unused-imports/no-unused-imports": "error",
+      //   "unused-imports/no-unused-imports": "error",
     },
   }
 );

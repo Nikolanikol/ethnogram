@@ -1,11 +1,10 @@
 import clsx from "clsx";
-import React, { FC, useState } from "react";
+import { FC } from "react";
 import { cityWocabular } from "../../UI/CityRow/CityWocabular";
 import { useDispatch } from "react-redux";
 import {
   setCityFilter,
   setCategoryFilter,
-  setModalVisible,
   setModalHidden,
 } from "../../slices/UserSlice/UserSlice";
 import { wocabular } from "../../UI/Categories/wocabular";

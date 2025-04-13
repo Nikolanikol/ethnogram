@@ -1,6 +1,6 @@
 import { UserProfile } from "../slices/UserSlice/UserType";
 
-export const cityFilter = (state: UserProfile[], city: string) => {
+export const getCityByFilter = (state: UserProfile[], city: string) => {
   return state.filter((item) => {
     if (city == "") {
       return true;

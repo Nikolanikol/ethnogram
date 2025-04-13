@@ -1,6 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "../slices/UserSlice/UserSlice";
-import Service from "../service";
 import { UserState } from "../slices/UserSlice/UserType";
 export const store = configureStore<{
   userReducer: UserState;
