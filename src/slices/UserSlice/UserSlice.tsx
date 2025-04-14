@@ -3,8 +3,6 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import { UserState } from "./UserType";
 import Service from "../../service";
 import { UserProfile } from "../../Components/Card/TypeCard";
-import { tagFilter } from "../../utils/tagFilter";
-import { getCityByFilter } from "../../utils/getCityByFilter";
 
 const initialState: UserState = {
   isLoading: true,
@@ -30,18 +28,9 @@ export const userSlice = createSlice({
   reducers: {
     setCityFilter: (state, action: PayloadAction<string>) => {
       state.cityFilter = action.payload;
-      state.filteredItems = [
-        ...tagFilter(getCityByFilter(state.items, state.cityFilter)),
-      ];
     },
     setCategoryFilter: (state, action: PayloadAction<string>) => {
       state.categoryFilter = action.payload;
-      state.filteredItems = [
-        ...tagFilter(
-          getCityByFilter(state.items, state.cityFilter),
-          state.categoryFilter
-        ),
-      ];
     },
     setModalVisible: (state, action: PayloadAction<boolean>) => {
       state.modalIsShow = action.payload;

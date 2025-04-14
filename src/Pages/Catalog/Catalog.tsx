@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import CardList from "../../Components/CardList/CardList";
 
 import Spinner from "../../Components/Spinner/Spinner";
@@ -7,13 +7,22 @@ import { AppDispatch, RootState } from "../../redux/store"; // Adjust the path t
 import { fetchUsers } from "../../slices/UserSlice/UserSlice";
 import ModalFilter from "../../Components/ModalFilter/ModalFilter";
 
+import { getCityByFilter } from "@/utils/getCityByFilter";
+
+import { tagFilter } from "@/utils/tagFilter";
+
 const Catalog = () => {
   const dispatch = useDispatch<AppDispatch>();
 
-  const { isLoading, filteredItems, modalIsShow } = useSelector(
+  const { isLoading, modalIsShow, categoryFilter, cityFilter } = useSelector(
     (state: RootState) => state.userReducer
   );
-
+  const filtereItems = useSelector((state: RootState) =>
+    tagFilter(
+      getCityByFilter(state.userReducer.items, cityFilter),
+      categoryFilter
+    )
+  );
   useEffect(() => {
     dispatch(fetchUsers());
   }, []);
@@ -22,7 +31,7 @@ const Catalog = () => {
   return (
     <div>
       <div>
-        <CardList data={filteredItems} />
+        <CardList data={filtereItems} />
         <ModalFilter isShow={modalIsShow} />
       </div>
     </div>

@@ -1,13 +1,29 @@
 import clsx from "clsx";
 import { FC } from "react";
 import { cityWocabular } from "../../UI/CityRow/CityWocabular";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   setCityFilter,
   setCategoryFilter,
   setModalHidden,
 } from "../../slices/UserSlice/UserSlice";
 import { wocabular } from "../../UI/Categories/wocabular";
+
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../../shadcn/Dialog";
+import { Button } from "@/shadcn/Button";
+import { Label } from "@/shadcn/Label";
+import { Input } from "@/shadcn/Input";
+import { RootState } from "@/redux/store";
+
 interface ModalFilterProps {
   isShow: boolean;
 }
@@ -16,6 +32,10 @@ export interface filterValues {
   category: string;
 }
 const ModalFilter: FC<ModalFilterProps> = ({ isShow }) => {
+  const { categoryFilter, cityFilter } = useSelector(
+    (state: RootState) => state.userReducer
+  );
+
   const dispatch = useDispatch();
   return (
     <div
@@ -25,59 +45,78 @@ const ModalFilter: FC<ModalFilterProps> = ({ isShow }) => {
           : "hidden"
       )}
     >
-      <button
-        className="h-5 w-full  border-2 px-4 py-2 border-red-500 rounded-xl "
-        onClick={() => dispatch(setModalHidden(false))}
+      <Dialog
+        open={isShow}
+        onOpenChange={(open) => dispatch(setModalHidden(false))}
       >
-        close
-      </button>
-      <div className="px-10 py-6 bg-white rounded-3xl shadow-2xl w-[500px] h-[700px]">
-        {" "}
-        <h3 className="font-bold text-4xl">Фильтр по категориям</h3>
-        <form
-          action=""
-          className="border-2 mt-5 flex flex-col gap-y-5 px-4 py-3"
-        >
-          <div className="flex flex-col gap-y-4">
-            <label htmlFor="city" className="h4 text-2xl">
-              Фильтр по городам
-            </label>
-            <select
-              name="city"
-              id="city"
-              className="border-1 rounded-xl px-3 py-1 cursor-pointer"
-              onChange={(e) => dispatch(setCityFilter(e.target.value))}
-            >
-              {cityWocabular.map((item) => {
-                return (
-                  <option key={item.id} value={item.id}>
-                    {item.ru}
-                  </option>
-                );
-              })}
-            </select>
-          </div>
-          <div className="flex flex-col gap-y-4">
-            <label htmlFor="city" className="h4 text-2xl">
-              Фильтр по тэгу
-            </label>
-            <select
-              name="category"
-              id="city"
-              className="border-1 rounded-xl px-3 py-1 cursor-pointer"
-              onChange={(e) => dispatch(setCategoryFilter(e.target.value))}
-            >
-              {wocabular.map((item) => {
-                return (
-                  <option key={item.id} value={item.id}>
-                    {item.title}
-                  </option>
-                );
-              })}
-            </select>
-          </div>
-        </form>
-      </div>
+        {/* <DialogTrigger asChild>
+          <Button variant="outline">Share</Button>
+        </DialogTrigger> */}
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Фильтр</DialogTitle>
+            <DialogDescription>Выберите город и категорию</DialogDescription>
+          </DialogHeader>
+
+          <form
+            action=""
+            className="border-2 mt-5 flex flex-col gap-y-5 px-4 py-3"
+          >
+            <div className="flex flex-col gap-y-4">
+              <label htmlFor="city" className="h4 text-2xl">
+                Фильтр по городам
+              </label>
+              <select
+                name="city"
+                id="city"
+                className="border-1 rounded-xl px-3 py-1 cursor-pointer"
+                onChange={(e) => dispatch(setCityFilter(e.target.value))}
+                value={cityFilter}
+              >
+                {cityWocabular.map((item) => {
+                  return (
+                    <option key={item.id} value={item.id}>
+                      {item.ru}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+            <div className="flex flex-col gap-y-4">
+              <label htmlFor="city" className="h4 text-2xl">
+                Фильтр по тэгу
+              </label>
+              <select
+                name="category"
+                id="city"
+                className="border-1 rounded-xl px-3 py-1 cursor-pointer"
+                onChange={(e) => dispatch(setCategoryFilter(e.target.value))}
+                value={categoryFilter}
+              >
+                {wocabular.map((item) => {
+                  return (
+                    <option key={item.id} value={item.id}>
+                      {item.title}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+          </form>
+
+          <DialogFooter className="sm:justify-start">
+            <DialogClose asChild>
+              <Button
+                className="cursor-pointer border-2 "
+                type="button"
+                variant="secondary"
+              >
+                Close
+              </Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
