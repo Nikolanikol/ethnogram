@@ -17,11 +17,9 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "../../shadcn/Dialog";
 import { Button } from "@/shadcn/Button";
-import { Label } from "@/shadcn/Label";
-import { Input } from "@/shadcn/Input";
+
 import { RootState } from "@/redux/store";
 
 interface ModalFilterProps {
@@ -47,7 +45,7 @@ const ModalFilter: FC<ModalFilterProps> = ({ isShow }) => {
     >
       <Dialog
         open={isShow}
-        onOpenChange={(open) => dispatch(setModalHidden(false))}
+        onOpenChange={() => dispatch(setModalHidden(false))}
       >
         {/* <DialogTrigger asChild>
           <Button variant="outline">Share</Button>

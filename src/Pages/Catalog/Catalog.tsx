@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import CardList from "../../Components/CardList/CardList";
 
 import Spinner from "../../Components/Spinner/Spinner";
