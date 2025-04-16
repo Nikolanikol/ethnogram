@@ -7,7 +7,7 @@ interface CardListProps {
 }
 const CardList: FC<CardListProps> = ({ data }) => {
   return (
-    <div className="flex flex-col gap-y-4">
+    <div className="flex flex-col gap-y-4 min-h-[100vh]">
       {data.map((card) => {
         return <Card data={card} key={card.id} />;
       })}

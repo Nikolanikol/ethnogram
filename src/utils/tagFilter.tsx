@@ -5,8 +5,6 @@ export const tagFilter = (
   categoryFilter: string = ""
 ) => {
   if (Number(categoryFilter) === 0) return state;
-  console.log(categoryFilter, "categories");
-  console.log(state, "state");
 
   return state.filter((item) => {
     if (item.categories) {
