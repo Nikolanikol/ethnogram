@@ -22,11 +22,11 @@ export const routes: Route[] = [
     component: <About />,
     exact: true,
   },
-  {
-    path: "/login",
-    component: <Login />,
-    exact: true,
-  },
+  //   {
+  //     path: "/login",
+  //     component: <Login />,
+  //     exact: true,
+  //   },
 ];
 export const links: Link[] = [
   {
@@ -37,8 +37,8 @@ export const links: Link[] = [
     path: "/about",
     name: "О нас",
   },
-  {
-    path: "/login",
-    name: "Войти",
-  },
+  //   {
+  //     path: "/login",
+  //     name: "Войти",
+  //   },
 ];

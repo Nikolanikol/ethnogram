@@ -1,13 +1,32 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import { persistReducer, persistStore } from "redux-persist";
+
+import storage from "redux-persist/lib/storage"; // использует localStorage для web
 import userReducer from "../slices/UserSlice/UserSlice";
 import { UserState } from "../slices/UserSlice/UserType";
-export const store = configureStore<{
-  userReducer: UserState;
-}>({
-  reducer: {
-    userReducer,
-  },
+import authReducer from "../slices/AuthSlice/AuthSlice";
+const persistConfig = {
+  key: "auth",
+  storage,
+  // whitelist: ["auth"], // сохраняем только auth-слайс
+
+  blacklist: ["confirmationResult"], // Не сохраняем confirmationResult
+};
+const rootReducer = combineReducers({
+  auth: authReducer,
+  userReducer: userReducer,
 });
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+export const store = configureStore({
+  reducer: persistedReducer,
+  // Отключаем проверку сериализуемости экшенов, если redux-persist вызывает предупреждения
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
+});
+export const persistor = persistStore(store);
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;
