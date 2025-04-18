@@ -3,40 +3,53 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import { UserState } from "./UserType";
 import Service from "../../service";
 import { UserProfile } from "../../Components/Card/TypeCard";
+import { act } from "react";
 
 const initialState: UserState = {
   isLoading: true,
   items: [],
   error: null,
   filteredItems: [],
-  cityFilter: "",
-  categoryFilter: "",
+  cityFilter: 0,
+  categoryFilter: 0,
   modalIsShow: false,
+  lastVisible: null,
+  currentPage: 1,
 };
 
-export const fetchUsers = createAsyncThunk("userSlice/fetchUsers", async () => {
-  try {
-    const res = await Service.getUsersCards();
-    return res;
-  } catch (error) {
-    throw error;
+export const fetchUsers = createAsyncThunk(
+  "userSlice/fetchUsers",
+  async ({ page, lastVisible }: { page: number; lastVisible: any }) => {
+    console.log("pstart fetching users");
+    try {
+      const limit = 10; // Количество элементов на страницу
+      const res = await Service.getUsersCards(lastVisible, limit);
+      console.log(res, "res.data slice");
+      return { data: res.data, lastVisible: res.lastVisible, page };
+    } catch (error) {
+      console.error("Ошибка при получении данных: slice", error);
+      throw error;
+    }
   }
-});
+);
 export const userSlice = createSlice({
   name: "userSlice",
   initialState,
   reducers: {
-    setCityFilter: (state, action: PayloadAction<string>) => {
-      state.cityFilter = action.payload;
+    setCityFilter: (state, action: PayloadAction<number>) => {
+      state.cityFilter = Number(action.payload);
     },
-    setCategoryFilter: (state, action: PayloadAction<string>) => {
-      state.categoryFilter = action.payload;
+    setCategoryFilter: (state, action: PayloadAction<number>) => {
+      state.categoryFilter = Number(action.payload);
     },
     setModalVisible: (state, action: PayloadAction<boolean>) => {
       state.modalIsShow = action.payload;
     },
     setModalHidden: (state, action: PayloadAction<boolean>) => {
       state.modalIsShow = action.payload;
+    },
+    setPage: (state, action: PayloadAction<number>) => {
+      state.currentPage = action.payload; // Устанавливаем текущую страницу
     },
   },
   extraReducers: (builder) => {
@@ -46,10 +59,21 @@ export const userSlice = createSlice({
       })
       .addCase(fetchUsers.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.items = action.payload as UserProfile[];
-        state.filteredItems = action.payload as UserProfile[];
+        if (action.payload.page === 1) {
+          // Если это первая страница, заменяем элементы
+          state.items = action.payload.data as UserProfile[];
+        } else {
+          // Если это не первая страница, добавляем элементы
+          state.items = action.payload.data as UserProfile[];
+          //   [
+          //     ...state.items,
+          //     ...(action.payload.data as UserProfile[]),
+          //   ];
+        }
+        state.filteredItems = state.items; // Обновляем отфильтрованные элементы
+        state.lastVisible = action.payload.lastVisible;
+        state.currentPage = action.payload.page; // Обновляем текущую страницу
       })
-
       .addCase(fetchUsers.rejected, (state) => {
         state.isLoading = false;
         state.error = "Ошибка при загрузке данных";
@@ -62,4 +86,5 @@ export const {
   setCategoryFilter,
   setModalVisible,
   setModalHidden,
+  setPage,
 } = userSlice.actions;

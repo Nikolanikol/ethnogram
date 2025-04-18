@@ -4,12 +4,22 @@ export const tagFilter = (
   state: UserProfile[],
   categoryFilter: string = ""
 ) => {
+  console.log(state, "tagfilter");
+  console.log(categoryFilter, "categoryFilter");
   if (Number(categoryFilter) === 0) return state;
 
   return state.filter((item) => {
     if (item.categories) {
-      return item.categories.includes(Number(categoryFilter));
+      return item.categories.filter((obj) => {
+        console.log(obj, "obj");
+        console.log(
+          obj === Number(categoryFilter),
+          "obj === Number(categoryFilter)"
+        );
+        return obj === Number(categoryFilter);
+      });
     }
+    console.log("no categories");
   });
 };
 

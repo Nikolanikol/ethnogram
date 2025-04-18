@@ -1,16 +1,15 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { persistReducer, persistStore } from "redux-persist";
-
+import { createTransform } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // использует localStorage для web
 import userReducer from "../slices/UserSlice/UserSlice";
 import { UserState } from "../slices/UserSlice/UserType";
 import authReducer from "../slices/AuthSlice/AuthSlice";
-const persistConfig = {
-  key: "auth",
-  storage,
-  // whitelist: ["auth"], // сохраняем только auth-слайс
 
-  blacklist: ["confirmationResult"], // Не сохраняем confirmationResult
+const persistConfig = {
+  key: "root",
+  storage,
+  whitelist: ["auth"],
 };
 const rootReducer = combineReducers({
   auth: authReducer,

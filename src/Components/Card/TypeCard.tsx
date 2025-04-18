@@ -1,3 +1,5 @@
+import firebase from "firebase/app";
+import "firebase/firestore";
 export interface UserProfile {
   id: string;
   uid: string;
@@ -15,6 +17,7 @@ export interface UserProfile {
   reports: string[];
   smallImage: string;
   smallImagePath: string;
+  lastVisible?: firebase.firestore.DocumentSnapshot | null;
 }
 interface _Timestamp {
   nanoseconds: number;

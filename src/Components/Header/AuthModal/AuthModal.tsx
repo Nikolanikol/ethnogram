@@ -1,77 +1,44 @@
 import clsx from "clsx";
 import { FC, useState } from "react";
-import { auth } from "../../../firebase/index";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  User,
-} from "firebase/auth";
 
 import {
   Dialog,
-  DialogClose,
   DialogContent,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "../../../shadcn/Dialog";
-
-import {
-  googleSignIn,
-  logoutUser,
-  setUser,
-} from "@/slices/AuthSlice/AuthSlice";
-
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@/shadcn/Button";
-import { PayloadAction } from "@reduxjs/toolkit";
-import { AppDispatch } from "@/redux/store";
+
+import { AppDispatch, RootState } from "@/redux/store";
+import { sendOTP, signOut, verifyOTP } from "@/slices/AuthSlice/AuthSlice";
 
 interface AuthModalProps {
   modal: boolean;
   setModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
-interface Social {
-  id: number;
-  name: string;
-  sign: () => PayloadAction<User | null>;
-}
+
 const AuthModal: FC<AuthModalProps> = ({ modal, setModal }) => {
   const dispatch = useDispatch<AppDispatch>();
 
-  const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
-  const [mode, setMode] = useState("login"); // ('login' или 'register')
+  const { user, loading, error, confirmationResult } = useSelector(
+    (state: RootState) => state.auth
+  );
+  const [phone, setPhone] = useState("+821077324344");
+  const [otp, setOtp] = useState("");
 
-  // Преобразование номера телефона в псевдо-email
-  const pseudoEmail = `${phone}`;
+  const handleSendOTP = () => {
+    if (!phone) return;
+    dispatch(sendOTP(phone));
+  };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    console.log(phone, password);
-    e.preventDefault();
-    if (!phone || !password) {
-      console.log("Пожалуйста, введите номер телефона и пароль");
-      return;
-    }
-    try {
-      if (mode === "register") {
-        const userCredential = await createUserWithEmailAndPassword(
-          auth,
-          pseudoEmail,
-          password
-        );
-        console.log("Пользователь зарегистрирован:", userCredential.user);
-      } else {
-        const userCredential = await signInWithEmailAndPassword(
-          auth,
-          pseudoEmail,
-          password
-        );
-        console.log("Пользователь авторизован:", userCredential.user);
-      }
-    } catch (error) {
-      console.error("Ошибка:", error);
-    }
+  const handleVerifyOTP = () => {
+    if (!otp || !confirmationResult) return;
+    dispatch(verifyOTP({ confirmationResult, otp }));
+  };
+
+  const handleSignOut = () => {
+    dispatch(signOut());
   };
   return (
     <div
@@ -85,40 +52,58 @@ const AuthModal: FC<AuthModalProps> = ({ modal, setModal }) => {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Регистрация</DialogTitle>
-            <form
-              onSubmit={handleSubmit}
-              action=""
-              className="border-2 min-w-[400px] min-h-[200px] flex flex-col justify-center items-center gap-5"
-            >
-              <input
-                type="text"
-                placeholder="Имя"
-                onChange={(e) => setPhone(e.target.value)}
-              />
-              <input
-                type="text"
-                placeholder="Пароль"
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <Button type="submit" className="cursor-pointer">
-                {mode === "register" ? "Зарегистрироваться" : "Войти"}{" "}
-              </Button>
-            </form>
-            <button
-              onClick={() =>
-                setMode(mode === "register" ? "login" : "register")
-              }
-            >
-              Переключить режим
-            </button>
-            <div className="flex gap-2">
-              <Button className="cursor-pointer">FaceBook</Button>
-              <Button
-                onClick={() => dispatch(googleSignIn())}
-                className="cursor-pointer"
-              >
-                Google
-              </Button>
+            <div>
+              <h2>Авторизация по номеру телефона</h2>
+              <div id="recaptcha-container"></div>
+              <form action="">
+                {user ? (
+                  <div>
+                    <p>Вы вошли как: {user.phoneNumber}</p>
+                    {/* <button onClick={handleSignOut}>Выйти</button> */}
+                  </div>
+                ) : (
+                  <div className="border-2 border-black rounded-md p-4 ">
+                    {!confirmationResult ? (
+                      <div className="flex flex-col gap-4">
+                        <input
+                          type="text"
+                          placeholder="+821000000000"
+                          value={phone}
+                          onChange={(e) => setPhone(e.target.value)}
+                          className="px-4 py-2 rounded-2xl"
+                        />
+                        <Button
+                          variant="default"
+                          onClick={handleSendOTP}
+                          disabled={loading}
+                          type="submit"
+                        >
+                          {loading ? "Отправка..." : "Отправить код"}
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col gap-4">
+                        <input
+                          type="text"
+                          placeholder="Введите OTP"
+                          value={otp}
+                          onChange={(e) => setOtp(e.target.value)}
+                          className="px-4 py-2 rounded-2xl"
+                        />
+                        <Button
+                          variant="default"
+                          onClick={handleVerifyOTP}
+                          disabled={loading}
+                          type="submit"
+                        >
+                          {loading ? "Проверка..." : "Проверить OTP"}
+                        </Button>
+                      </div>
+                    )}
+                    {error && <p style={{ color: "red" }}>{error}</p>}
+                  </div>
+                )}
+              </form>
             </div>
           </DialogHeader>
 

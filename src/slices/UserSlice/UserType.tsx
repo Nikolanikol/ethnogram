@@ -1,11 +1,15 @@
+import firebase from "firebase/app";
+import "firebase/firestore";
 export interface UserState {
   items: UserProfile[];
   isLoading: boolean;
   error: string | null;
   filteredItems: UserProfile[];
-  cityFilter: string;
-  categoryFilter: string;
+  cityFilter: number;
+  categoryFilter: number;
   modalIsShow: boolean;
+  lastVisible?: firebase.firestore.DocumentSnapshot | null;
+  currentPage: number;
 }
 
 export interface UserProfile {
