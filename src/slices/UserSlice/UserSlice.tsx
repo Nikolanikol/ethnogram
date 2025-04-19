@@ -3,7 +3,6 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import { UserState } from "./UserType";
 import Service from "../../service";
 import { UserProfile } from "../../Components/Card/TypeCard";
-import { act } from "react";
 
 const initialState: UserState = {
   isLoading: true,
@@ -20,7 +19,6 @@ const initialState: UserState = {
 export const fetchUsers = createAsyncThunk(
   "userSlice/fetchUsers",
   async ({ page, lastVisible }: { page: number; lastVisible: any }) => {
-    console.log("pstart fetching users");
     try {
       const limit = 10; // Количество элементов на страницу
       const res = await Service.getUsersCards(lastVisible, limit);
@@ -59,9 +57,7 @@ export const userSlice = createSlice({
       })
       .addCase(fetchUsers.fulfilled, (state, action) => {
         state.isLoading = false;
-        // if (action.payload.page === 1) {
-        //   state.items = action.payload.data as UserProfile[];
-        // } else {
+
         state.items = [
           ...state.items,
           ...(action.payload.data as UserProfile[]),

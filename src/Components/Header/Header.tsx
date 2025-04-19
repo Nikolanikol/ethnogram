@@ -18,7 +18,7 @@ const Header = () => {
     navigate("/");
     dispatch(setModalVisible(true));
   };
-  console.log(confirmationResult, "confirmationResult");
+
   return (
     <div className=" bg-[#1E1E1E] text-[#FFFFFF] ">
       <div id="recaptcha-container"></div>
@@ -28,7 +28,9 @@ const Header = () => {
             {" "}
             <div className="logo flex gap-2 items-center">
               {/* <img src={logo} alt="logo" className="h-full w-[100px]" /> */}
-              <span className="text-xl md:text-2xl lg:text-4xl">ETHNO</span>
+              <span className="text-xs font-bold md:text-2xl lg:text-4xl">
+                ETHNO
+              </span>
             </div>
           </NavLink>
 
@@ -58,7 +60,7 @@ const Header = () => {
             ) : (
               <button
                 type="button"
-                className="px-4 py-2 rounded-lg border-1 bg-white text-black  lg:w-[200px] lg:h-[50px] cursor-pointer"
+                className="px-2 py-1 text-xs  rounded-lg border-1 bg-white text-black  lg:w-[200px] lg:h-[50px] cursor-pointer"
                 onClick={() => dispatch(signOut())}
               >
                 Выйти
@@ -67,7 +69,7 @@ const Header = () => {
 
             <button
               type="button"
-              className="px-4 py-2 rounded-lg border-1 bg-white text-black  lg:w-[200px] lg:h-[50px] cursor-pointer"
+              className="px-2 py-1 text-xs rounded-lg border-1 bg-white text-black  lg:w-[200px] lg:h-[50px] cursor-pointer"
               onClick={() => handleClick()}
             >
               Поиск
