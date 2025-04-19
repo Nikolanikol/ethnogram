@@ -24,7 +24,7 @@ export const fetchUsers = createAsyncThunk(
     try {
       const limit = 10; // Количество элементов на страницу
       const res = await Service.getUsersCards(lastVisible, limit);
-      console.log(res, "res.data slice");
+
       return { data: res.data, lastVisible: res.lastVisible, page };
     } catch (error) {
       console.error("Ошибка при получении данных: slice", error);
@@ -59,17 +59,16 @@ export const userSlice = createSlice({
       })
       .addCase(fetchUsers.fulfilled, (state, action) => {
         state.isLoading = false;
-        if (action.payload.page === 1) {
-          // Если это первая страница, заменяем элементы
-          state.items = action.payload.data as UserProfile[];
-        } else {
-          // Если это не первая страница, добавляем элементы
-          state.items = action.payload.data as UserProfile[];
-          //   [
-          //     ...state.items,
-          //     ...(action.payload.data as UserProfile[]),
-          //   ];
-        }
+        // if (action.payload.page === 1) {
+        //   state.items = action.payload.data as UserProfile[];
+        // } else {
+        state.items = [
+          ...state.items,
+          ...(action.payload.data as UserProfile[]),
+        ];
+        // }
+        // Если это не первая страница, добавляем элементы
+
         state.filteredItems = state.items; // Обновляем отфильтрованные элементы
         state.lastVisible = action.payload.lastVisible;
         state.currentPage = action.payload.page; // Обновляем текущую страницу

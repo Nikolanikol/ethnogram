@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CardList from "../../Components/CardList/CardList";
 import firebase from "firebase/app";
 import "firebase/firestore";
@@ -8,17 +8,13 @@ import { AppDispatch, RootState } from "../../redux/store"; // Adjust the path t
 import { fetchUsers, setPage } from "../../slices/UserSlice/UserSlice";
 import ModalFilter from "../../Components/ModalFilter/ModalFilter";
 
-import { getCityByFilter } from "@/utils/getCityByFilter";
-
-import { tagFilter } from "@/utils/tagFilter";
-import { Button } from "@/shadcn/Button";
 import { db } from "@/firebase";
 import MyPagination from "@/Components/Pagination/MyPagination";
-import { UserProfile } from "@/Components/Card/TypeCard";
 
 const Catalog = () => {
   const dispatch = useDispatch<AppDispatch>();
-
+  const observerRef = useRef<HTMLDivElement | null>(null);
+  const [counter, setCounter] = useState(0);
   async function getUserCategories(
     lastVisible: firebase.firestore.DocumentSnapshot | null = null,
     limit: number = 90,
@@ -76,10 +72,7 @@ const Catalog = () => {
       throw error;
     }
   }
-  //   getUserCategories(null, 10, 2, 402).then((res) =>
-  //     console.log(res, "filterd")
-  //   );
-  //   ---------------------------------------------------
+
   const {
     isLoading,
     modalIsShow,
@@ -90,12 +83,7 @@ const Catalog = () => {
     items,
     filteredItems,
   } = useSelector((state: RootState) => state.userReducer);
-  //   const filtereItems = useSelector((state: RootState) =>
-  //     tagFilter(
-  //       getCityByFilter(state.userReducer.items, cityFilter),
-  //       categoryFilter
-  //     )
-  //   );
+
   useEffect(() => {
     dispatch(
       fetchUsers({
@@ -103,18 +91,50 @@ const Catalog = () => {
         lastVisible,
       })
     );
-  }, [currentPage]);
+  }, [currentPage, counter]);
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            console.log("Observer элемент появился внизу экрана!");
+            // Здесь можно вызвать дополнительную логику, например, подгрузку данных
+            console.log("INTERSECTING");
+            setTimeout(() => {
+              setCounter((i) => i + 1);
+            }, 200);
+            console.log(currentPage, "currentPage");
+          }
+        });
+      },
+      {
+        root: null, // Отслеживаем относительно viewport
+        rootMargin: "0px", // Отступы
+        threshold: 0.1, // Полностью видимый элемент
+      }
+    );
 
+    if (observerRef.current) {
+      observer.observe(observerRef.current);
+    }
+
+    // return () => {
+    //   if (observerRef.current) {
+    //     observer.unobserve(observerRef.current);
+    //   }
+    // };
+  }, []);
+  console.log(currentPage, "currentPage");
   if (isLoading) <Spinner />;
   return (
-    <div>
+    <div className="min-h-screen">
       <div>
-        <div>
-          <MyPagination />
-        </div>
-
         <CardList data={filteredItems} />
         <ModalFilter isShow={modalIsShow} />
+
+        <div ref={observerRef} className="observer h-20 w-full bg-inherit">
+          {" "}
+        </div>
       </div>
     </div>
   );
